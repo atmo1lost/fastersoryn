@@ -36,8 +36,9 @@ jobs:
 
       - name: ya2d via psp-pacman
         run: |
-          psp-pacman -Syyu --noconfirm -y
-          psp-pacman -S ya2d --noconfirm -y
+          export CI=1
+          export MAKEPKG_NONINTERACTIVE=1
+          psp-pacman -S ya2d --noconfirm
 
       - name: update psp-cfw-sdk
         run: curl -OJL "https://github.com/pspdev/psp-cfw-sdk/releases/download/latest/psp-cfw-sdk.zip"
