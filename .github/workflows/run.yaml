@@ -1,4 +1,4 @@
-name: FasterARK
+name: fastersoryn
 on:
   push:
     branches:
@@ -14,14 +14,13 @@ jobs:
     steps:
       - name: dependencies
         run: |
-          sudo apt-get install git openssh-client clang automake autoconf zlib1g-dev python3 python3-pycryptodome python3-ecdsa p7zip-full curl unzip sudo mkisofs
+          sudo apt-get install -y git openssh-client clang automake autoconf zlib1g-dev python3 python3-pycryptodome python3-ecdsa p7zip-full curl unzip sudo mkisofs
 
       - name: getting lastest pspdev
         run: |
           curl -OJL 'https://github.com/pspdev/pspdev/releases/latest/download/pspdev-ubuntu-latest-x86_64.tar.gz'
           sudo tar xvf pspdev-ubuntu-latest-x86_64.tar.gz -C /usr/local/
-          echo $PSPDEV/bin >> $GITHUB_PATH
-          echo PATH="$PATH:$PSPDEV/bin"
+          echo "$PSPDEV/bin" >> $GITHUB_PATH
 
       - name: cloning and building lastest pspsdk
         run: |
@@ -37,8 +36,8 @@ jobs:
 
       - name: ya2d via psp-pacman
         run: |
-          echo "y" | psp-pacman -Syyu
-          echo "y" | psp-pacman -S ya2d
+          psp-pacman -Syyu --noconfirm -y
+          psp-pacman -S ya2d --noconfirm -y
 
       - name: update psp-cfw-sdk
         run: curl -OJL "https://github.com/pspdev/psp-cfw-sdk/releases/download/latest/psp-cfw-sdk.zip"
@@ -68,7 +67,7 @@ jobs:
       - name: mkpsxiso
         run: |
           curl -OJL 'https://github.com/Lameguy64/mkpsxiso/releases/download/v2.20/mkpsxiso-2.20-Linux.deb'
-          sudo apt-get install ./mkpsxiso-2.20-Linux.deb
+          sudo apt-get install -y ./mkpsxiso-2.20-Linux.deb
 
       - name: build
         run: make clean && make
@@ -86,8 +85,8 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: fastersoryn-release
-          path: dist/*.zip
-      - name:
+          path: dist/
+      - name: Create Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: latest
