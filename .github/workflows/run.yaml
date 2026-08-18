@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: dependencies
         run: |
-          sudo apt-get install -y git openssh-client clang automake autoconf zlib1g-dev python3 python3-pycryptodome python3-ecdsa p7zip-full curl unzip sudo mkisofs
+          sudo apt-get install -y git openssh-client clang automake autoconf zlib1g-dev python3 python3-pycryptodome python3-ecdsa p7zip-full curl unzip sudo mkisofs libarchive-tools
 
       - name: getting lastest pspdev
         run: |
