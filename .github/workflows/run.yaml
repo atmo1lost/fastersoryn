@@ -12,22 +12,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Dependencies
+      - name: dependencies
         run: |
           sudo apt-get install git openssh-client clang automake autoconf zlib1g-dev python3 python3-pycryptodome python3-ecdsa p7zip-full curl unzip sudo mkisofs
 
-      - name: Getting lastest pspdev
+      - name: getting lastest pspdev
         run: |
           curl -OJL 'https://github.com/pspdev/pspdev/releases/latest/download/pspdev-ubuntu-latest-x86_64.tar.gz'
           sudo tar xvf pspdev-ubuntu-latest-x86_64.tar.gz -C /usr/local/
           echo $PSPDEV/bin >> $GITHUB_PATH
           echo PATH="$PATH:$PSPDEV/bin"
 
-      - name: Cloning and Building lastest pspsdk
+      - name: cloning and building lastest pspsdk
         run: |
           git clone https://github.com/pspdev/pspsdk
 
-      - name: Bootstrap sdk and build
+      - name: bootstrap sdk and build
         working-directory: pspsdk
         run: |
           bash ./bootstrap
@@ -40,58 +40,58 @@ jobs:
           psp-pacman -Syyu --noconfirm
           psp-pacman -S ya2d --noconfirm
 
-      - name: Update psp-cfw-sdk
+      - name: update psp-cfw-sdk
         run: curl -OJL "https://github.com/pspdev/psp-cfw-sdk/releases/download/latest/psp-cfw-sdk.zip"
 
-      - name: Extract psp-cfw-sdk
+      - name: extract psp-cfw-sdk
         run: sudo unzip -o psp-cfw-sdk.zip -d /
 
-      - name: Checkout
+      - name: checkout
         uses: actions/checkout@v7
         with:
           submodules: recursive
 
-      - name: Clone VitaSDK
+      - name: clone vitasdk
         run: |
           git clone https://github.com/vitasdk/vdpm
 
-      - name: Bootstrap VitaSDK
+      - name: bootstrap vitasdk
         working-directory: vdpm
         run: |
-          ./bootstrap-vitasdk.sh
-          echo VITASDK=/usr/local/vitasdk >> $GITHUB_ENV
-          echo PATH=$VITASDK/bin:$PATH >> $GITHUB_ENV
+          make ./bootstrap-vitasdk.sh
+          echo "VITASDK=/usr/local/vitasdk" >> $GITHUB_ENV
+          echo "PATH=/usr/local/vitasdk/bin:$PATH" >> $GITHUB_ENV
           export VITASDK=/usr/local/vitasdk
           export PATH=$VITASDK/bin:$PATH
-          ./install-all.sh
+          ./install-all.sh -y
 
       - name: mkpsxiso
         run: |
           curl -OJL 'https://github.com/Lameguy64/mkpsxiso/releases/download/v2.20/mkpsxiso-2.20-Linux.deb'
           sudo apt-get install ./mkpsxiso-2.20-Linux.deb
 
-      - name: Build
+      - name: build
         run: make clean && make
 
-      - name: Upload
+      - name: upload
         uses: actions/upload-artifact@v7
         with:
-          name: FasterARK-release
+          name: fastersoryn-release
           path: dist/*
   release:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifacts
+      - name: download artifacts
         uses: actions/download-artifact@v8
         with:
-          name: FasterARK-release
+          name: fastersoryn-release
           path: dist/*.zip
       - name:
         uses: softprops/action-gh-release@v3
         with:
           tag_name: latest
-          name: FasterARK
+          name: fastersoryn
           prerelease: false
           make_latest: true
           files: |
