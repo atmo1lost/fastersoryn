@@ -72,7 +72,7 @@ void extractFlash0Archive(char* archive, char* dest_path){
     static char filename[ARK_PATH_SIZE];
     strcpy(filepath, dest_path);
 
-    curtext = "Extracting FLASH0.ARK";
+    curtext = "extracting FLASH0.ARK";
 
     if (strncmp(dest_path, "flash", 4) == 0) open_flash();
     
@@ -116,10 +116,10 @@ void extractFlash0Archive(char* archive, char* dest_path){
         k_tbl.KernelIOClose(fdr);
     }
     else{
-        curtext = "Nothing to be done";
+        curtext = "nothing to be done";
     }
 
-    curtext = "Finished!";
+    curtext = "finished!";
 }
 
 void copyLibraryFiles(){

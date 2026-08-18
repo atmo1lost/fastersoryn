@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 permissions:
   contents: write
 env:
@@ -16,14 +17,14 @@ jobs:
           sudo apt-get install git openssh-client clang automake autoconf zlib1g-dev python3 python3-pycryptodome python3-ecdsa p7zip-full curl unzip sudo mkisofs
 
       - name: Getting lastest pspdev
-        run: | 
+        run: |
           curl -OJL 'https://github.com/pspdev/pspdev/releases/latest/download/pspdev-ubuntu-latest-x86_64.tar.gz'
           sudo tar xvf pspdev-ubuntu-latest-x86_64.tar.gz -C /usr/local/
           echo $PSPDEV/bin >> $GITHUB_PATH
           echo PATH="$PATH:$PSPDEV/bin"
 
       - name: Cloning and Building lastest pspsdk
-        run: | 
+        run: |
           git clone https://github.com/pspdev/pspsdk
 
       - name: Bootstrap sdk and build
@@ -41,7 +42,7 @@ jobs:
 
       - name: Update psp-cfw-sdk
         run: curl -OJL "https://github.com/pspdev/psp-cfw-sdk/releases/download/latest/psp-cfw-sdk.zip"
-      
+
       - name: Extract psp-cfw-sdk
         run: sudo unzip -o psp-cfw-sdk.zip -d /
 
@@ -50,10 +51,9 @@ jobs:
         with:
           submodules: recursive
 
-
       - name: Clone VitaSDK
         run: |
-         git clone https://github.com/vitasdk/vdpm
+          git clone https://github.com/vitasdk/vdpm
 
       - name: Bootstrap VitaSDK
         working-directory: vdpm
@@ -65,13 +65,13 @@ jobs:
           export PATH=$VITASDK/bin:$PATH
           ./install-all.sh
 
-      - name:  mkpsxiso
+      - name: mkpsxiso
         run: |
           curl -OJL 'https://github.com/Lameguy64/mkpsxiso/releases/download/v2.20/mkpsxiso-2.20-Linux.deb'
           sudo apt-get install ./mkpsxiso-2.20-Linux.deb
 
       - name: Build
-        run:  make clean && make 
+        run: make clean && make
 
       - name: Upload
         uses: actions/upload-artifact@v7

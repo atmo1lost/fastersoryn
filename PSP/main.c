@@ -10,7 +10,7 @@
 #include <ya2d.h>
 #include <tinyfont.h>
 
-PSP_MODULE_INFO("FasterARK PSP", PSP_MODULE_USER, 1, 0);
+PSP_MODULE_INFO("fastersoryn psp", PSP_MODULE_USER, 1, 0);
 PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_USER | PSP_THREAD_ATTR_VFPU);
 
 
@@ -91,14 +91,14 @@ int main(int argc, char** argv){
 
     loadGraphics(argc, argv);
 
-    curtext = "ARK-5 Loader Started.";
+    curtext = "soryn Loader Started.";
     
-    curtext = "Initializing kernel exploit...";
+    curtext = "initializing kernel exploit...";
     res = pspXploitInitKernelExploit();
 
     if (res == 0){
 
-        curtext = "Corrupting kernel...";
+        curtext = "corrupting kernel...";
         res = pspXploitDoKernelExploit();
         
         if (res == 0){

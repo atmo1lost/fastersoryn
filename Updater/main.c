@@ -18,7 +18,7 @@
 #include "main.h"
 #include "version.h"
 
-PSP_MODULE_INFO("ARKUpdater", 0x800, 1, 0);
+PSP_MODULE_INFO("sorynUpdater", 0x800, 1, 0);
 PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_VSH | PSP_THREAD_ATTR_VFPU);
 
 PSP_DISABLE_NEWLIB();
@@ -134,7 +134,7 @@ void loadGraphics(int argc, char** argv){
     background = ya2d_load_PNG_file_offset(argv[0], YA2D_PLACE_RAM, pbp_header.pic1_offset);
     icon = ya2d_load_PNG_file_offset(argv[0], YA2D_PLACE_RAM, pbp_header.icon0_offset);
 
-    snprintf(header, sizeof(header), "ARK Updater %d.%d.%d", ARK_MAJOR_VERSION, ARK_MINOR_VERSION, ARK_MICRO_VERSION);
+    snprintf(header, sizeof(header), "sorynUpdater %d.%d.%d", ARK_MAJOR_VERSION, ARK_MINOR_VERSION, ARK_MICRO_VERSION);
 
     SceUID thid = sceKernelCreateThread("draw_thread", &drawthread, 0x10, 0x20000, PSP_THREAD_ATTR_VSH|PSP_THREAD_ATTR_VFPU, NULL);
     if (thid >= 0){
