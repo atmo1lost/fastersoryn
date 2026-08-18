@@ -1,4 +1,4 @@
-.PHONY: psp vita updater translations
+.PHONY: psp updater translations theme clean 
 
 PY = $(shell which python3)
 PSPDEV = $(shell psp-config --pspdev-path)
@@ -7,7 +7,7 @@ CHOVYSIGNDIR = ./Resources/Chovy-Sign
 CHOVYSIGN = $(CHOVYSIGNDIR)/ChovySign-CLI
 LANGFOLDER = Resources/Language/Translations/resources
 
-all: translations themes psp vita updater
+all: translations themes psp updater
 	echo "All Done!"
 
 translations:
@@ -67,42 +67,6 @@ psp: translations
 	cd dist/tmp/ && zip -m -r FasterARK_psp_full.zip * && cd ../../ && mv dist/tmp/FasterARK_psp_full.zip dist/
 	rm -r dist/tmp/
 
-vita: translations
-	mkdir -p dist
-	mkdir -p PSVita/res/save
-	mkdir -p PSVita/loader/psp/eboot/iso_files/psp_game/sysdir
-	mkdir -p PSVita/res/psp/
-	mkdir -p PSVita/res/rif
-	mkdir -p PSVita/res/psx/
-	cp -r Resources/ARK_01234 PSVita/res/save/
-	cp -r Resources/Extras/* PSVita/res/save/ARK_01234/
-	cp -r Resources/PSVita/* PSVita/res/save/ARK_01234/
-	cp Resources/Language/Translations/LANG.ARK PSVita/res/save/ARK_01234/
-#   ePSP Bubble
-	cp Resources/ARK_01234/ICON0.PNG PSVita/loader/psp/eboot/iso_files/psp_game/
-	make -C PSVita/loader/psp/eboot
-	cp PSVita/loader/psp/eboot/psploader.prx PSVita/loader/psp/eboot/iso_files/psp_game/sysdir/boot.bin
-	mkisofs -o PSVita/loader/psp/eboot/psploader.iso PSVita/loader/psp/eboot/iso_files/
-	$(CHOVYSIGN) --psp PSVita/loader/psp/eboot/psploader.iso --no-psvimg --nopspemudrm EP0099-NPUZ01234_00-CHOVYSIGN0000000
-	cp $(CHOVYSIGNDIR)/output/PSP/LICENSE/EP0099-NPUZ01234_00-CHOVYSIGN0000000.rif PSVita/res/rif/psp.rif
-	cp $(CHOVYSIGNDIR)/output/PSP/GAME/NPUZ01234/EBOOT.PBP PSVita/res/psp/
-	cp Resources/ARK_01234/ICON0.PNG PSVita/loader/psp/pboot/
-	make -C PSVita/loader/psp/pboot
-	cp PSVita/loader/psp/pboot/PBOOT.PBP PSVita/res/psp/
-	make -C Resources/Peops
-	$(PY) $(BUILDTOOLS)/gz/pspgz.py PSVita/res/save/ARK_01234/PS1SPU.PRX $(BUILDTOOLS)/gz/UserModule.hdr Resources/Peops/peops.prx peops 0x0000
-#   ePSX Bubble
-	make -C PSVita/loader/psx
-	make -C PSVita/loader/psx/payload
-	cp PSVita/loader/psx/payload/ARKX.BIN PSVita/res/psx/
-	$(CHOVYSIGN) --pops PSVita/loader/psx/psxloader.cue --pops-info "ARK-X" PSVita/loader/psx/ICON0.PNG --pops-eboot PSVita/loader/psx/psxloader.prx --no-psvimg --nopspemudrm EP0099-SCPS10084_00-CHOVYSIGN0000000
-	cp $(CHOVYSIGNDIR)/output/PSP/LICENSE/EP0099-SCPS10084_00-CHOVYSIGN0000000.rif PSVita/res/rif/psx.rif
-	cp $(CHOVYSIGNDIR)/output/PSP/GAME/SCPS10084/EBOOT.PBP PSVita/res/psx/
-#	Installer
-	mkdir -p PSVita/build
-	cd PSVita/build && cmake .. && make && cd ../../
-	cp PSVita/build/FasterARK.vpk dist/FasterARK_psvita.vpk
-
 updater: translations
 #	Updater
 	mkdir -p dist/tmp/
@@ -127,21 +91,8 @@ updater: translations
 
 clean:
 	rm -rf dist
-	rm -rf PSVita/build
-	rm -f PSVita/res/psp/*
-	rm -f PSVita/res/psx/*
-	rm -f PSVita/res/rif/*
-	rm -rf PSVita/res/save/ARK_01234
 	rm -rf $(CHOVYSIGNDIR)/output
 	rm -f Resources/Language/Translations/LANG.ARK
-	rm -f PSVita/loader/psp/eboot/psploader.iso
-	rm -f PSVita/loader/psp/eboot/iso_files/psp_game/sysdir/*
-	rm -f PSVita/loader/psp/eboot/iso_files/psp_game/ICON0.PNG
-	rm -f PSVita/loader/psp/pboot/ICON0.PNG
 	make -C PSP clean
 	make -C Updater clean
 	make -C Resources/Peops clean
-	make -C PSVita/loader/psp/eboot clean
-	make -C PSVita/loader/psp/pboot clean
-	make -C PSVita/loader/psx clean
-	make -C PSVita/loader/psx/payload clean

@@ -51,25 +51,6 @@ jobs:
         with:
           submodules: recursive
 
-      - name: clone vitasdk
-        run: |
-          git clone https://github.com/vitasdk/vdpm
-
-      - name: bootstrap vitasdk
-        working-directory: vdpm
-        run: |
-          bash ./bootstrap-vitasdk.sh
-          echo "VITASDK=/usr/local/vitasdk" >> $GITHUB_ENV
-          echo "PATH=/usr/local/vitasdk/bin:$PATH" >> $GITHUB_ENV
-          export VITASDK=/usr/local/vitasdk
-          export PATH=$VITASDK/bin:$PATH
-          ./install-all.sh -y
-
-      - name: mkpsxiso
-        run: |
-          curl -OJL 'https://github.com/Lameguy64/mkpsxiso/releases/download/v2.20/mkpsxiso-2.20-Linux.deb'
-          sudo apt-get install -y ./mkpsxiso-2.20-Linux.deb
-
       - name: build
         run: make clean && make
 
@@ -96,6 +77,5 @@ jobs:
           make_latest: true
           files: |
             **/*.zip
-            **/*.vpk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
