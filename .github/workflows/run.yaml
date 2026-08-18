@@ -37,8 +37,8 @@ jobs:
 
       - name: ya2d via psp-pacman
         run: |
-          psp-pacman -Syyu --noconfirm
-          psp-pacman -S ya2d --noconfirm
+          echo "y" | psp-pacman -Syyu
+          echo "y" | psp-pacman -S ya2d
 
       - name: update psp-cfw-sdk
         run: curl -OJL "https://github.com/pspdev/psp-cfw-sdk/releases/download/latest/psp-cfw-sdk.zip"
