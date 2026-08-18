@@ -58,7 +58,7 @@ jobs:
       - name: bootstrap vitasdk
         working-directory: vdpm
         run: |
-          make ./bootstrap-vitasdk.sh
+          bash ./bootstrap-vitasdk.sh
           echo "VITASDK=/usr/local/vitasdk" >> $GITHUB_ENV
           echo "PATH=/usr/local/vitasdk/bin:$PATH" >> $GITHUB_ENV
           export VITASDK=/usr/local/vitasdk
